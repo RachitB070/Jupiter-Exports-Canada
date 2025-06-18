@@ -212,44 +212,49 @@ export default function Home() {
 
   return (
     <div>
-      {/* Hero Section - Redesigned and Compact */}
-      <section className="relative py-20 overflow-hidden">
+      {/* Hero Section - Made bigger and redesigned buttons */}
+      <section className="relative py-32 overflow-hidden min-h-[80vh] flex items-center">
         {/* Background with gradient overlay */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-r from-[#d35400]/90 to-[#f39c12]/80 z-10"></div>
           <Image
-            src="https://images.unsplash.com/photo-1605003179269-c446bb939f00?q=80&w=1920&auto=format&fit=crop"
-            alt="Scrap metal yard"
+            src="/global-shipping-bg.jpeg"
+            alt="Global shipping and logistics"
             fill
-            className="object-cover"
+            className="object-cover brightness-50"
             priority
           />
         </div>
 
         {/* Content */}
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-3xl mx-auto text-center">
+        <div className="container mx-auto px-4 relative z-20">
+          <div className="max-w-4xl mx-auto text-center">
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Premium Scrap Metal Solutions</h1>
-              <p className="text-xl mb-8 text-white/90">
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 text-white leading-tight">
+                Premium Scrap Metal Solutions
+              </h1>
+              <p className="text-xl md:text-2xl mb-12 text-white/90 max-w-3xl mx-auto leading-relaxed">
                 Jupiter Exports Canada: Leading exporters of high-quality ferrous and non-ferrous scrap metal products
                 to global markets.
               </p>
-              <div className="flex flex-wrap gap-4 justify-center">
+              <div className="flex flex-wrap gap-6 justify-center items-center">
                 <Button
                   size="lg"
-                  className="bg-white text-[#d35400] hover:bg-white/90 hover:text-[#d35400] font-bold"
+                  className="group relative bg-transparent text-white border-2 border-white hover:bg-white hover:text-[#d35400] font-bold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl backdrop-blur-sm"
                   asChild
                 >
-                  <Link href="/contact">Contact Us</Link>
+                  <Link href="/contact">
+                    <span className="relative z-10">Contact Us</span>
+                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
+                  </Link>
                 </Button>
                 <Button
                   size="lg"
-                  variant="outline"
-                  className="text-white border-white hover:bg-white/10"
+                  className="group relative bg-transparent text-white border-2 border-white hover:bg-white hover:text-[#d35400] font-bold px-8 py-4 text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl backdrop-blur-sm"
                   onClick={scrollToProducts}
                 >
-                  View Products
+                  <span className="relative z-10">View Products</span>
+                  <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md"></div>
                 </Button>
               </div>
             </motion.div>

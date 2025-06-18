@@ -5,15 +5,14 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import { motion } from "framer-motion"
-import { Phone, Mail, Clock, Send } from "lucide-react"
+import { Phone, Mail, Send, CheckCircle, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { useToast } from "@/hooks/use-toast"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 export default function ContactPage() {
-  const { toast } = useToast()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,11 +21,23 @@ export default function ContactPage() {
     message: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
+  const [errorMessage, setErrorMessage] = useState("")
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
+
+  // Reset success state after 5 seconds
+  useEffect(() => {
+    if (submitStatus === "success") {
+      const timer = setTimeout(() => {
+        setSubmitStatus("idle")
+      }, 5000)
+      return () => clearTimeout(timer)
+    }
+  }, [submitStatus])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -36,23 +47,39 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitStatus("idle")
+    setErrorMessage("")
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      })
 
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for contacting Jupiter Exports Canada. We'll get back to you shortly.",
-    })
+      const data = await response.json()
 
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      company: "",
-      message: "",
-    })
-    setIsSubmitting(false)
+      if (response.ok) {
+        setSubmitStatus("success")
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          company: "",
+          message: "",
+        })
+      } else {
+        setSubmitStatus("error")
+        setErrorMessage(data.error || "Failed to send message")
+      }
+    } catch (error) {
+      setSubmitStatus("error")
+      setErrorMessage("Network error. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -106,7 +133,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">Phone</h3>
-                    <p className="text-gray-600">+1 (416) 555-0123</p>
+                    <p className="text-gray-600">+1 (647) 861-4000</p>
                   </div>
                 </div>
 
@@ -116,19 +143,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">Email</h3>
-                    <p className="text-gray-600">info@jupiterexports.ca</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary/10 p-3 rounded-full">
-                    <Clock className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-lg">Business Hours</h3>
-                    <p className="text-gray-600">Monday - Friday: 9:00 AM - 5:00 PM</p>
-                    <p className="text-gray-600">Saturday: 10:00 AM - 2:00 PM</p>
-                    <p className="text-gray-600">Sunday: Closed</p>
+                    <p className="text-gray-600">info@jupiterexportscanada.com</p>
                   </div>
                 </div>
               </div>
@@ -141,10 +156,33 @@ export default function ContactPage() {
               className="bg-white p-8 rounded-lg shadow-lg"
             >
               <h2 className="text-2xl font-bold mb-6">Send Us a Message</h2>
+
+              {/* Status Messages */}
+              {submitStatus === "success" && (
+                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="mb-6">
+                  <Alert className="border-green-200 bg-green-50 p-6">
+                    <CheckCircle className="h-6 w-6 text-green-600" />
+                    <AlertDescription className="text-green-800 text-lg font-medium">
+                      🎉 Message sent successfully! We'll get back to you within 24 hours.
+                      <div className="mt-2 text-sm text-green-700">
+                        A confirmation email has been sent to {formData.email || "your email address"}.
+                      </div>
+                    </AlertDescription>
+                  </Alert>
+                </motion.div>
+              )}
+
+              {submitStatus === "error" && (
+                <Alert className="mb-6 border-red-200 bg-red-50">
+                  <AlertCircle className="h-4 w-4 text-red-600" />
+                  <AlertDescription className="text-red-800">{errorMessage}</AlertDescription>
+                </Alert>
+              )}
+
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid gap-4">
                   <div className="grid gap-2">
-                    <Label htmlFor="name">Full Name</Label>
+                    <Label htmlFor="name">Full Name *</Label>
                     <Input
                       id="name"
                       name="name"
@@ -152,11 +190,12 @@ export default function ContactPage() {
                       value={formData.name}
                       onChange={handleChange}
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="email">Email</Label>
+                    <Label htmlFor="email">Email *</Label>
                     <Input
                       id="email"
                       name="email"
@@ -165,6 +204,7 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={handleChange}
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
 
@@ -176,6 +216,7 @@ export default function ContactPage() {
                       placeholder="+1 (123) 456-7890"
                       value={formData.phone}
                       onChange={handleChange}
+                      disabled={isSubmitting}
                     />
                   </div>
 
@@ -187,11 +228,12 @@ export default function ContactPage() {
                       placeholder="Your Company"
                       value={formData.company}
                       onChange={handleChange}
+                      disabled={isSubmitting}
                     />
                   </div>
 
                   <div className="grid gap-2">
-                    <Label htmlFor="message">Message</Label>
+                    <Label htmlFor="message">Message *</Label>
                     <Textarea
                       id="message"
                       name="message"
@@ -200,11 +242,18 @@ export default function ContactPage() {
                       value={formData.message}
                       onChange={handleChange}
                       required
+                      disabled={isSubmitting}
                     />
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full bg-[#d35400] hover:bg-[#e67e22]" disabled={isSubmitting}>
+                <Button
+                  type="submit"
+                  className={`w-full transition-all duration-300 ${
+                    submitStatus === "success" ? "bg-green-600 hover:bg-green-700" : "bg-[#d35400] hover:bg-[#e67e22]"
+                  }`}
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? (
                     <span className="flex items-center gap-2">
                       <svg
@@ -227,7 +276,12 @@ export default function ContactPage() {
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         ></path>
                       </svg>
-                      Sending...
+                      Sending Message...
+                    </span>
+                  ) : submitStatus === "success" ? (
+                    <span className="flex items-center gap-2">
+                      <CheckCircle className="h-4 w-4" />
+                      Message Sent Successfully!
                     </span>
                   ) : (
                     <span className="flex items-center gap-2">

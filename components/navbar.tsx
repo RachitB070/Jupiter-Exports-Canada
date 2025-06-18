@@ -59,7 +59,9 @@ export default function Navbar() {
     <header
       className={cn(
         "fixed top-0 w-full z-50 transition-all duration-300",
-        scrolled ? "bg-background/95 backdrop-blur-md shadow-md" : "bg-transparent",
+        scrolled
+          ? "bg-white/95 backdrop-blur-lg shadow-lg border-b border-white/20"
+          : "bg-white/90 backdrop-blur-md shadow-sm",
       )}
     >
       <div className="container mx-auto px-4 py-3">
@@ -67,7 +69,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center gap-2">
             <div className="relative h-14 w-14">
               <Image
-                src="/jupiter-logo.png"
+                src="/jupiter-logo-new.png"
                 alt="Jupiter Exports Canada Logo"
                 fill
                 className="object-contain"
@@ -109,7 +111,7 @@ export default function Navbar() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden bg-background border-t"
+            className="md:hidden bg-white/90 backdrop-blur-lg border-t border-white/20"
           >
             <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
               {navItems.map((item) => (

@@ -1,6 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone } from "lucide-react"
+import {Mail, Phone } from "lucide-react"
 
 export default function Footer() {
   return (
@@ -10,7 +10,7 @@ export default function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-2 mb-4">
               <div className="relative h-12 w-12">
-                <Image src="/jupiter-logo.png" alt="Jupiter Exports Canada Logo" fill className="object-contain" />
+                <Image src="/jupiter-logo-new.png" alt="Jupiter Exports Canada Logo" fill className="object-contain" />
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-xl text-[#f39c12]">Jupiter</span>
@@ -21,20 +21,6 @@ export default function Footer() {
               Leading exporters of ferrous and non-ferrous scrap metal products, committed to sustainable recycling
               solutions.
             </p>
-            <div className="flex gap-4">
-              <Link href="#" className="text-gray-400 hover:text-[#f39c12] transition-colors">
-                <Facebook className="h-5 w-5" />
-                <span className="sr-only">Facebook</span>
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-[#f39c12] transition-colors">
-                <Instagram className="h-5 w-5" />
-                <span className="sr-only">Instagram</span>
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-[#f39c12] transition-colors">
-                <Linkedin className="h-5 w-5" />
-                <span className="sr-only">LinkedIn</span>
-              </Link>
-            </div>
           </div>
 
           <div>
@@ -71,17 +57,13 @@ export default function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-4">Contact</h3>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3">
-                <MapPin className="h-5 w-5 text-[#f39c12] shrink-0 mt-0.5" />
-                <span className="text-gray-400">123 Metal Street, Toronto, ON M5V 2K1, Canada</span>
-              </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-[#f39c12] shrink-0" />
-                <span className="text-gray-400">+1 (416) 555-0123</span>
+                <span className="text-gray-400">+1 (647) 861-4000</span>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-[#f39c12] shrink-0" />
-                <span className="text-gray-400">info@jupiterexports.ca</span>
+                <span className="text-gray-400">info@jupiterexportscanada.com</span>
               </li>
             </ul>
           </div>
