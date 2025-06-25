@@ -133,7 +133,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-lg">Phone</h3>
-                    <p className="text-gray-600">+1 (647) 861-4000</p>
+                    <p className="text-gray-600">+1 (905) 500-3767</p>
                   </div>
                 </div>
 
